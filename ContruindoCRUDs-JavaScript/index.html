@@ -1,0 +1,122 @@
+<form>
+    <input name="campoCriaPost" placeholder="Digite o seu post" />
+    <button type="submit">postar</button>
+</form>
+<ul class="listaDePosts">
+</ul>
+
+
+<script>
+    console.log("Ola pesoasl! - Nivel 2");
+    console.log("ContruindoCRUDS");
+    // ""Modelo""
+    const miniRedeSocial = {
+        usuarios: [
+            {
+                usarname: 'omariosouto',
+            }
+        ],
+        posts: [
+            {
+                id: 1,
+                owner: "omariosouto",
+                content: "Meu primeiro tweet"
+            }
+        ],
+        readPosts() {
+            miniRedeSocial.posts.forEach(({ id, owner, content }) => {
+                miniRedeSocial.criaPost({ id, owner: owner, content: content }, true);
+            })
+        },
+        criaPost(dados, htmlOnly = false) {
+            const idInternoAqui = Date.now();
+            if (!htmlOnly) {
+                // Cria Posts na Memória (Array/Objeto)
+                miniRedeSocial.posts.push({
+                    id: dados.id || idInternoAqui,
+                    owner: dados.owner,
+                    content: dados.content
+                });
+            }
+            // Cria posts no HTML
+            const $listaDePosts = document.querySelector('.listaDePosts');
+            $listaDePosts.insertAdjacentHTML('afterbegin', `
+            <li data-id="${idInternoAqui}">
+                <button class="btn-delete">Delete</button>
+                <span contenteditable>
+                ${dados.content}
+                <span>
+
+                </li>
+                `);
+        },
+        apagaPosts(id) {
+            const listaDePostsAtualizada = miniRedeSocial.posts.filter((postAtual) => {
+                return postAtual.id !== Number(id);
+            })
+            console.log(listaDePostsAtualizada);
+            miniRedeSocial.posts = listaDePostsAtualizada;
+        },
+        atualizaContentPost(id, novoConteudo) {
+            const postQueVaiSerAtualizado = pegaPosts().find((posto) => {
+                return post.id === Number(id);
+            });
+            console.log(postQueVaiSerAtualizado)
+        }
+    };
+
+        // [Código de front and: Web]
+        const $meuForm = document.querySelector('form');
+        console.log($meuForm);
+
+        // Crud: [Read]
+        miniRedeSocial.readPosts();
+
+        // Crud: [Create]
+        $meuForm.addEventListener('submit', function criaPostController(infosDoEvento) {
+            infosDoEvento.preventDefault();
+            console.log('Estamos criando um post novo')
+            const $campoCriaPost = document.querySelector('input[name="campoCriaPost"]');
+
+            miniRedeSocial.criaPost({ owner: "omariosouto", content: $campoCriaPost.value });
+
+            $campoCriaPost.value = ' ';
+        })
+
+    // CRUD: [Delete]
+    document.querySelector('.listaDePosts').addEventListener('click', function (infosDoEvento) {
+            console.log('Houve um click',);
+            const elementoAtual = infosDoEvento.target;
+            const isBtnDeleteClick = infosDoEvento.target.classList.contains('btn-delete')
+            if (isBtnDeleteClick) {
+                console.log('Clicou no botão de apagar',);
+                const id = elementoAtual.parentNode.getAttribute('data-id');
+
+                // Manipula o lado do ServerSide/BancoDeDados/Arquivo/Fonte!
+                miniRedeSocial.apagaPosts(id);
+                elementoAtual.parentNode.remove();
+
+                //Manipula a View/Output e ...
+                console.log(miniRedeSocial.posts);
+
+            }
+        });
+
+        // CRUD: [Update]
+        document.querySelector('.listaDePosts').addEventListener('input', function (infosDoEvento) {
+            console.log('Houve uma digitação',);
+            const elementoAtual = infosDoEvento.target;
+            const id = elementoAtual.parentNodegetAttribute('data-id');
+
+            miniRedeSocial.atualizaContentPost(id, elementoAtual.innerText);
+            
+        });
+
+
+
+
+// Linguagem Pura:
+// - Cria variaveis 
+// - Sincronizar o conteudo das variaveis com o HTML
+// - Atualiza variaveis
+</script>
